@@ -38,7 +38,7 @@ namespace PdfCreatorDemo
         private void button1_Click(object sender, EventArgs e)
         {
             var persons = GetPersons();
-            var doc = PdfCreator.CreatePdf(persons);
+            var doc = PdfCreator.CreatePdf1(persons);
             const string filename = "HelloWorld.pdf";
             doc.Save(filename);
             Process.Start(filename);
