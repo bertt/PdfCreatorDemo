@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 using MigraDoc.DocumentObjectModel;
@@ -9,8 +10,26 @@ using PdfSharp.Pdf;
 
 namespace PdfCreatorDemo
 {
+    public class Person
+    {
+        public int Id { get; set; }
+        public String Name { get; set; }
+        public String FullName { get; set; }
+    }
+
+
     public partial class Form1 : Form
     {
+        public List<Person> GetPersons()
+        {
+            var p1 = new Person() {FullName = "Puk", Id = 1, Name = "Pietje"};
+            var p2 = new Person() { FullName = "Puk2", Id = 2, Name = "Pietje2" };
+            var p3 = new Person() { FullName = "Puk3", Id = 3, Name = "Pietje3" };
+            var p4 = new Person() { FullName = "Puk4", Id = 3, Name = "Pietje4" };
+            var persons = new List<Person>() {p1, p2, p3, p4};
+            return persons;
+        }
+
         public Form1()
         {
             InitializeComponent();
@@ -18,43 +37,13 @@ namespace PdfCreatorDemo
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var document = new PdfDocument();
-            document.Info.Title = "Created with PDFsharp";
-            var page = document.AddPage();
-            var gfx = XGraphics.FromPdfPage(page);
-            var font = new XFont("Verdana", 20, XFontStyle.BoldItalic);
-            gfx.DrawString("Wagenlijst", font, XBrushes.Black,
-            new XRect(0, 0, page.Width, page.Height),
-            XStringFormats.Center);
-
-            var doc = new Document();
-            var sec = doc.AddSection();
-            var para = sec.AddParagraph();
-            para.Format.Alignment = ParagraphAlignment.Justify;
-            para.Format.Font.Name = "Times New Roman";
-            para.Format.Font.Size = 12;
-            para.Format.Font.Color = MigraDoc.DocumentObjectModel.Colors.DarkGray;
-            para.Format.Font.Color = MigraDoc.DocumentObjectModel.Colors.DarkGray;
-            para.AddText("Duisism odigna acipsum delesenisl ");
-            para.AddFormattedText("ullum in velenit", TextFormat.Bold);
-
-
-            para.AddText(" ipit iurero dolum zzriliquisis nit wis dolore vel et nonsequipit, velendigna " +
-              "auguercilit lor se dipisl duismod tatem zzrit at laore magna feummod oloborting ea con vel " +
-              "essit augiati onsequat luptat nos diatum vel ullum illummy nonsent nit ipis et nonsequis " +
-              "niation utpat. Odolobor augait et non etueril landre min ut ulla feugiam commodo lortie ex " +
-              "essent augait el ing eumsan hendre feugait prat augiatem amconul laoreet. ≤≥≈≠");
-            para.Format.Borders.Distance = "5pt";
-            para.Format.Borders.Color = Colors.Gold;
-
-            var docRenderer = new DocumentRenderer(doc);
-            docRenderer.PrepareDocument();
-            docRenderer.RenderObject(gfx, XUnit.FromCentimeter(5), XUnit.FromCentimeter(10), "12cm", para);
-            
+            var persons = GetPersons();
+            var doc = PdfCreator.CreatePdf(persons);
             const string filename = "HelloWorld.pdf";
-            document.Save(filename);
+            doc.Save(filename);
             Process.Start(filename);
         }
+
 
 
     }
